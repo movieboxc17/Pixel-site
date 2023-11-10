@@ -23,9 +23,9 @@
     }
 
     .pixel {
-      width: 1px; /* Adjusted size to make it smaller */
-      height: 1px; /* Adjusted size to make it smaller */
-      margin: 0.5px; /* Set the margin to create a 0.5x0.5 pixel space */
+      width: 3px;
+      height: 3px;
+      margin: 0.5px; /* Set the margin to create a 1x1 pixel space */
     }
   </style>
 </head>
@@ -33,46 +33,42 @@
   <div class="pixel-container">
     <!-- Use JavaScript to generate the pixel grid -->
     <script>
-      // Function to get a color from an image at a specific position
-      function getColorFromImage(imageData, x, y) {
-        const index = (x + y * imageData.width) * 4;
-        const red = imageData.data[index];
-        const green = imageData.data[index + 1];
-        const blue = imageData.data[index + 2];
-        return `rgb(${red}, ${green}, ${blue})`;
-      }
+      const pixelContainer = document.querySelector('.pixel-container');
 
-      // Function to generate a pixel with color from an image
-      function createPixel(imageData, x, y) {
-        const color = getColorFromImage(imageData, x, y);
-        return `<div class="pixel" style="background-color:${color}"></div>`;
-      }
-
-      // Load the resized image
-      const image = new Image();
-      image.src = 'image.jpg';
-      image.crossOrigin = 'Anonymous'; // Enable cross-origin resource sharing
-
-      // Resize the image to a smaller size
-      const targetWidth = 100;
-      const targetHeight = (image.height / image.width) * targetWidth;
-
-      // Draw the resized image on a canvas to get pixel data
-      image.onload = function() {
+      // Function to get a color based on the pixel color from the image
+      function getColorFromImage(x, y, img) {
         const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
         const context = canvas.getContext('2d');
-        context.drawImage(image, 0, 0, targetWidth, targetHeight);
-        const imageData = context.getImageData(0, 0, targetWidth, targetHeight);
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0, img.width, img.height);
 
-        // Loop to create pixels using colors from the image
-        for (let i = 0; i < targetHeight; i++) {
-          document.write('<div class="pixel-row">');
-          for (let j = 0; j < targetWidth; j++) {
-            document.write(createPixel(imageData, j, i));
+        const pixel = context.getImageData(x, y, 1, 1).data;
+        return `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+      }
+
+      // Load the image
+      const img = new Image();
+      img.src = 'image.jpg';
+      img.onload = function() {
+        // Loop to create 200 rows
+        for (let i = 0; i < 200; i++) {
+          const pixelRow = document.createElement('div');
+          pixelRow.classList.add('pixel-row');
+
+          // Loop to create 300 pixels in each row
+          for (let j = 0; j < 300; j++) {
+            const pixel = document.createElement('div');
+            pixel.classList.add('pixel');
+
+            // Get color from the image at the corresponding position
+            const color = getColorFromImage(j, i, img);
+            pixel.style.backgroundColor = color;
+
+            pixelRow.appendChild(pixel);
           }
-          document.write('</div>');
+
+          pixelContainer.appendChild(pixelRow);
         }
       };
     </script>
