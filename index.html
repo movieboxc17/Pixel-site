@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #000; /* Set background color to black */
+    }
+
+    .pixel-container {
+      display: flex;
+      flex-direction: column; /* Arrange pixels in a column */
+    }
+
+    .pixel-row {
+      display: flex;
+    }
+
+    .pixel {
+      width: 2px;
+      height: 2px;
+      background-color: #fff; /* Set pixel color to white */
+      margin: 1px; /* Set the margin to create a 1x1 pixel space */
+    }
+  </style>
+</head>
+<body>
+  <div class="pixel-container">
+    <!-- Use JavaScript to generate the pixel grid -->
+    <script>
+      // Loop to create 30 rows
+      for (let i = 0; i < 200; i++) {
+        document.write('<div class="pixel-row">');
+        
+        // Loop to create 30 pixels in each row
+        for (let j = 0; j < 300; j++) {
+          document.write('<div class="pixel"></div>');
+        }
+        
+        document.write('</div>');
+      }
+    </script>
+  </div>
+</body>
+</html>
