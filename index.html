@@ -25,7 +25,6 @@
     .pixel {
       width: 2px;
       height: 2px;
-      background-color: #fff; /* Set pixel color to white */
       margin: 1px; /* Set the margin to create a 1x1 pixel space */
     }
   </style>
@@ -34,17 +33,44 @@
   <div class="pixel-container">
     <!-- Use JavaScript to generate the pixel grid -->
     <script>
-      // Loop to create 30 rows
-      for (let i = 0; i < 200; i++) {
-        document.write('<div class="pixel-row">');
-        
-        // Loop to create 30 pixels in each row
-        for (let j = 0; j < 300; j++) {
-          document.write('<div class="pixel"></div>');
-        }
-        
-        document.write('</div>');
+      // Function to get a color from an image at a specific position
+      function getColorFromImage(imageData, x, y) {
+        const index = (x + y * imageData.width) * 4;
+        const red = imageData.data[index];
+        const green = imageData.data[index + 1];
+        const blue = imageData.data[index + 2];
+        return `rgb(${red}, ${green}, ${blue})`;
       }
+
+      // Function to generate a pixel with color from an image
+      function createPixel(imageData, x, y) {
+        const color = getColorFromImage(imageData, x, y);
+        return `<div class="pixel" style="background-color:${color}"></div>`;
+      }
+
+      // Load the image
+      const image = new Image();
+      image.src = 'image.jpg';
+      image.crossOrigin = 'Anonymous'; // Enable cross-origin resource sharing
+
+      // Draw the image on a canvas to get pixel data
+      image.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const imageData = context.getImageData(0, 0, image.width, image.height);
+
+        // Loop to create pixels using colors from the image
+        for (let i = 0; i < image.height; i++) {
+          document.write('<div class="pixel-row">');
+          for (let j = 0; j < image.width; j++) {
+            document.write(createPixel(imageData, j, i));
+          }
+          document.write('</div>');
+        }
+      };
     </script>
   </div>
 </body>
