@@ -16,6 +16,7 @@
     .pixel-container {
       display: flex;
       flex-direction: column; /* Arrange pixels in a column */
+      animation: movePixels 0.05s linear infinite alternate; /* Animation for pixel movement */
     }
 
     .pixel-row {
@@ -23,9 +24,15 @@
     }
 
     .pixel {
-      width: 6px;
-      height: 6px;
-      margin: 0.5px; /* Set the margin to create a 1x1 pixel space */
+      width: 2px;
+      height: 2px;
+      margin: 0,1px; /* Set the margin to create a 1x1 pixel space */
+    }
+
+    @keyframes movePixels {
+      to {
+        transform: translateX(50px); /* Move pixels 50 pixels to the right */
+      }
     }
   </style>
 </head>
@@ -33,51 +40,23 @@
   <div class="pixel-container">
     <!-- Use JavaScript to generate the pixel grid -->
     <script>
-      const pixelContainer = document.querySelector('.pixel-container');
+      // Function to get a color based on the current column
+      function getColorByColumn(column) {
+        const colors = ['#FF0000', '#00FF00', '#0000FF'];
+        return colors[column % colors.length];
+      }
 
-      // Load the image
-      const img = new Image();
-      img.src = 'image.jpg';
-      img.crossOrigin = 'Anonymous'; // Allow cross-origin resource sharing
-
-      img.onload = function() {
-        // Define the number of rows and columns to render
-        const numRows = 50;
-        const numCols = 75;
-
-        // Loop to create rows
-        for (let i = 0; i < numRows; i++) {
-          const pixelRow = document.createElement('div');
-          pixelRow.classList.add('pixel-row');
-
-          // Loop to create pixels in each row
-          for (let j = 0; j < numCols; j++) {
-            const pixel = document.createElement('div');
-            pixel.classList.add('pixel');
-
-            // Get color from the image at the corresponding position
-            const x = Math.floor(j / numCols * img.width);
-            const y = Math.floor(i / numRows * img.height);
-            const color = getColorFromImage(x, y, img);
-            pixel.style.backgroundColor = color;
-
-            pixelRow.appendChild(pixel);
-          }
-
-          pixelContainer.appendChild(pixelRow);
+      // Loop to create 200 rows
+      for (let i = 0; i < 200; i++) {
+        document.write('<div class="pixel-row">');
+        
+        // Loop to create 300 pixels in each row
+        for (let j = 0; j < 600; j++) {
+          const randomColor = getColorByColumn(j);
+          document.write('<div class="pixel" style="background-color:' + randomColor + '"></div>');
         }
-      };
-
-      // Function to get a color based on the pixel color from the image
-      function getColorFromImage(x, y, img) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = 1;
-        canvas.height = 1;
-        context.drawImage(img, x, y, 1, 1, 0, 0, 1, 1);
-
-        const pixel = context.getImageData(0, 0, 1, 1).data;
-        return `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+        
+        document.write('</div>');
       }
     </script>
   </div>
