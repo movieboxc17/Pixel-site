@@ -23,9 +23,9 @@
     }
 
     .pixel {
-      width: 2px;
-      height: 2px;
-      margin: 1px; /* Set the margin to create a 1x1 pixel space */
+      width: 1px; /* Adjusted size to make it smaller */
+      height: 1px; /* Adjusted size to make it smaller */
+      margin: 0.5px; /* Set the margin to create a 0.5x0.5 pixel space */
     }
   </style>
 </head>
@@ -48,24 +48,28 @@
         return `<div class="pixel" style="background-color:${color}"></div>`;
       }
 
-      // Load the image
+      // Load the resized image
       const image = new Image();
       image.src = 'image.jpg';
       image.crossOrigin = 'Anonymous'; // Enable cross-origin resource sharing
 
-      // Draw the image on a canvas to get pixel data
+      // Resize the image to a smaller size
+      const targetWidth = 100;
+      const targetHeight = (image.height / image.width) * targetWidth;
+
+      // Draw the resized image on a canvas to get pixel data
       image.onload = function() {
         const canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
         const context = canvas.getContext('2d');
-        context.drawImage(image, 0, 0, image.width, image.height);
-        const imageData = context.getImageData(0, 0, image.width, image.height);
+        context.drawImage(image, 0, 0, targetWidth, targetHeight);
+        const imageData = context.getImageData(0, 0, targetWidth, targetHeight);
 
         // Loop to create pixels using colors from the image
-        for (let i = 0; i < image.height; i++) {
+        for (let i = 0; i < targetHeight; i++) {
           document.write('<div class="pixel-row">');
-          for (let j = 0; j < image.width; j++) {
+          for (let j = 0; j < targetWidth; j++) {
             document.write(createPixel(imageData, j, i));
           }
           document.write('</div>');
